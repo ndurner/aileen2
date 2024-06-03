@@ -1,8 +1,13 @@
 {
     "_comment_server": "'Server' operating mode of interaction with the Agent",
     "server": {
+        "_comment_host": "host name/ip address to bind the Twilio webhook to",
         "host": "0.0.0.0",
+
+        "_comment_port": "port to bind the Twilio webhook to",
         "port": 5000,
+
+        "_comment_auth_token": "Twilio auth token, used to verify webhooks calls",
         "twilio_auth_token": null
     },
 
@@ -12,6 +17,7 @@
 
     "_comment_ai": "AI model configurations",
     "ai": {
+        "_comment_ai": "Nvidia model catalog API key, used for LLM inference",
         "nvidia_api_key": null
     }
 }

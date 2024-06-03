@@ -12,7 +12,6 @@
 
     "_comment_ai": "AI model configurations",
     "ai": {
-        "nvidia_api_key": null,
-        "openai_api_key": null
+        "nvidia_api_key": null
     }
 }

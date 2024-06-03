@@ -21,7 +21,6 @@ class Config:
         # Environment variables override
         self.twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN', self.config_data['server'].get('twilio_auth_token'))
         self.nvidia_api_key = os.getenv('NVIDIA_API_KEY', self.config_data['ai'].get('nvidia_api_key'))
-        self.openai_api_key = os.getenv('OPENAI_API_KEY', self.config_data['ai'].get('openai_api_key'))
         self.host = self.config_data['server']['host']
         self.port = self.config_data['server']['port']
 

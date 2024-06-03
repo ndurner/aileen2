@@ -2,4 +2,7 @@ python-dotenv
 langchain-nvidia-ai-endpoints
 langchain_openai
 langchain
+fastapi
+uvicorn
+twilio
 singleton-decorator

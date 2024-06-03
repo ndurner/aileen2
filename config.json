@@ -1,0 +1,18 @@
+{
+    "_comment_server": "'Server' operating mode of interaction with the Agent",
+    "server": {
+        "host": "0.0.0.0",
+        "port": 5000,
+        "twilio_auth_token": null
+    },
+
+    "_comment_cli": "'Command line client' operating mode of interaction",
+    "cli": {
+    },
+
+    "_comment_ai": "AI model configurations",
+    "ai": {
+        "nvidia_api_key": null,
+        "openai_api_key": null
+    }
+}

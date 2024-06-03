@@ -2,3 +2,4 @@ python-dotenv
 langchain-nvidia-ai-endpoints
 langchain_openai
 langchain
+singleton-decorator

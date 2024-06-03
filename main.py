@@ -1,5 +1,4 @@
 import argparse
-from dotenv import load_dotenv
 
 def handle_command_line_args():
     parser = argparse.ArgumentParser(description="AI Task Agent")
@@ -10,4 +9,3 @@ def handle_command_line_args():
 
 if __name__ == "__main__":
     handle_command_line_args()
-    load_dotenv()

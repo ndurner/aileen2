@@ -6,3 +6,4 @@ fastapi
 uvicorn
 twilio
 singleton-decorator
+kagglehub

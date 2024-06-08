@@ -30,20 +30,35 @@ def report_error_to_user(error_msg: str)
 
 Think silently and respond with the tool call in Python. Ensure Python syntax validity, so it can be be parsed with the AST package.
 Avoid returning anything in addition to Python tool-calling code, e.g. explainers, so that AST parsing will succeed. Reject Markdown, embrace plaintext.
-'''
 
-dl_btag = '''To proceed, will need to download it first, step-by-step. The webpage is open and the screenshot looks like this:
+Examples:
+get_bundestag_transcript("https://example.com/")
+get_youtube_transcript("https://example.com/")
+report_error_to_user("Website unreachable")'''
+
+dl_btag = '''To proceed with the user request, you will need to download it first, step-by-step. The webpage is open and the screenshot looks like this:
 ###
 {screenshot_description}
 ###
 
-You have the following additional tools available:
+You now have the following tools available:
 ###
 def find_options_button() -> str
     """
         Get the pixels coordinates of the options button
     """
+
+def report_error_to_user(error_msg: str)
+"""
+    Report an error to the our customer (human user) in case of unrecoverable failure
+
+    :error_msg str: the text to be sent to the user
+"""
 ###
 
 Think silently and respond with the tool call in Python. Ensure Python syntax validity, so it can be be parsed with the AST package.
-Avoid returning anything in addition to Python tool-calling code, e.g. explainers, so that AST parsing will succeed. Reject Markdown, embrace plaintext.'''
+Avoid returning anything in addition to Python tool-calling code, e.g. explainers, so that AST parsing will succeed. Reject Markdown, embrace plaintext.
+
+Examples:
+find_options_button()
+report_error_to_user("Website unreachable")'''

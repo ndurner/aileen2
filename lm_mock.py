@@ -7,7 +7,7 @@ class LM_Mock(LM):
     Canned responses from granite-8b-code-instruct
     """
 
-    def start_agent(self, user_task: str) -> str:
+    def start_agent(self, user_task: str, screenshot_desc: str) -> str:
         """
         Kick-off agentic session by posing the user_task to the LM and
         offering tools.

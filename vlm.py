@@ -12,6 +12,12 @@ TOKENIZER_PATH = os.path.join(TOKENIZER_DIR, "vlm_tokenizer.model")
 class VLM:
     """Visual model implementation"""
 
+    def desc_en(self, image: Image) -> str:
+        """
+            Describe image in English language
+        """
+        pass
+
     def scan_for_button(self, image: Image, button: str) -> Tuple[int, int, int, int]:
         """
         Searches for a button that the model recognizes as 'button'.

@@ -16,7 +16,11 @@ class WebAgent:
     cur_screenshot = Image.new("RGB", (200, 200))
 
     def start(self, task_prompt: str):
-        next_step = self.lm.start_agent(task_prompt)
+        # get web browser screenshot description
+        desc = self.vlm.desc_en(self.cur_screenshot)
+
+        # determine next step
+        next_step = self.lm.start_agent(task_prompt, desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
 
         if tool_name == "get_bundestag_transcript" and tool_args:

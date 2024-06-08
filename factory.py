@@ -5,7 +5,7 @@ from lm_ngc import LM_NGC
 from vlm import VLM
 from vlm_mock import VLM_Mock
 from config import Config
-
+import logging
 
 @singleton
 class Factory:
@@ -19,7 +19,7 @@ class Factory:
         elif lm == "lm_ngc":
             return LM_NGC()
         else:
-            print(f"")
+            logging.error(f"LM '{lm}' not found")
             return None
         
     def provide_vlm(self) -> VLM:

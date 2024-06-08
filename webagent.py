@@ -1,16 +1,18 @@
 from singleton_decorator import singleton
 from lm_mock import LM_Mock
 from vlm_mock import VLM_Mock
+from factory import Factory
 import ast
 from typing import Any, Tuple
 from PIL import Image
+import logging
 
 class WebAgent:
     """AI Agent driving tasks"""
 
-    # FIXME: use real models
-    lm = LM_Mock()
-    vlm = VLM_Mock()
+    factory = Factory()
+    lm = factory.provide_lm()
+    vlm = factory.provide_vlm()
     cur_screenshot = Image.new("RGB", (200, 200))
 
     def start(self, task_prompt: str):

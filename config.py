@@ -19,21 +19,10 @@ class Config:
         self.nvidia_api_key = os.getenv('NVIDIA_API_KEY', self.config_data['ai'].get('nvidia_api_key'))
         self.host = self.config_data['server']['host']
         self.port = self.config_data['server']['port']
+        self.lm = self.config_data['implementations']['agent_lm']
+        self.vlm = self.config_data['implementations']['vlm']
 
-    def get_twilio_auth_token(self):
-        return self.twilio_auth_token
-
-    def get_nvidia_api_key(self):
-        return self.nvidia_api_key
-
-    def get_openai_api_key(self):
-        return self.openai_api_key
-
-    def get_host(self):
-        return self.host
-
-    def get_port(self):
-        return self.port        # Load logging configurations
+        # Load logging configurations
         self.log_level = self.config_data['logging']['level']
         self.log_format = self.config_data['logging']['format']
         self.log_datefmt = self.config_data['logging']['datefmt']

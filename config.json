@@ -21,6 +21,15 @@
         "nvidia_api_key": null
     },
 
+    "_comment_implementations": "Concrete implementations to use (mock-up vs. actual)",
+    "implementations": {
+        "_comment_lm": "The AI model to use for the planning Agent. Values: 'lm_mock'.",
+        "agent_lm": "lm_mock",
+
+        "_comment_vlm": "The AI model to use for Vision. Values: 'vlm_mock'",
+        "vlm": "vlm_mock"
+    },
+
     "_comment_logging": "Configuration for the logging facility",
     "logging": {
         "level": "DEBUG",

@@ -14,7 +14,7 @@ async def receive_sms(request: Request):
     Receives SMS messages from Twilio and validates the request using Twilio's signature.
     """
     # Validate the Twilio signature
-    validator = RequestValidator(config.get_twilio_auth_token())
+    validator = RequestValidator(config.twilio_auth_token)
     data = await request.form()
     request_valid = validator.validate(
         str(request.url),
@@ -34,4 +34,4 @@ async def receive_sms(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=config.get_host(), port=config.get_port())
+    uvicorn.run(app, host=config.host, port=config.port)

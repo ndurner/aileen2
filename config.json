@@ -23,15 +23,15 @@
 
     "_comment_implementations": "Concrete implementations to use (mock-up vs. actual)",
     "implementations": {
-        "_comment_lm": "The AI model to use for the planning Agent. Values: 'lm_mock'.",
-        "agent_lm": "lm_mock",
+        "_comment_lm": "The AI model to use for the planning Agent. Values: 'lm_mock', 'lm_ngc'.",
+        "agent_lm": "lm_ngc",
 
         "_comment_vlm": "The AI model to use for Vision. Values: 'vlm_mock'",
         "vlm": "vlm_mock",
 
         "_comment_lm_ngc": "Configuration for Nvidia NGC",
         "lm_ngc": {
-            "model": "ibm/granite-8b-code-instruct",
+            "model": "meta/llama3-8b-instruct",
             "base_url": null
         }
     },

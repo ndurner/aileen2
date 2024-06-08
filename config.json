@@ -19,5 +19,14 @@
     "ai": {
         "_comment_ai": "Nvidia model catalog API key, used for LLM inference",
         "nvidia_api_key": null
+    },
+
+    "_comment_logging": "Configuration for the logging facility",
+    "logging": {
+        "level": "DEBUG",
+        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        "datefmt": "%Y-%m-%d %H:%M:%S",
+        "filename": "app.log",
+        "filemode": "w"
     }
 }

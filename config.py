@@ -5,10 +5,6 @@ from singleton_decorator import singleton
 
 @singleton
 class Config:
-    """
-    Configuration settings access
-    """
-
     def __init__(self):
         load_dotenv()  # Load environment variables from .env
         self._load_configurations()
@@ -18,7 +14,7 @@ class Config:
         with open('config.json') as config_file:
             self.config_data = json.load(config_file)
 
-        # Environment variables override
+        # Load other configurations
         self.twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN', self.config_data['server'].get('twilio_auth_token'))
         self.nvidia_api_key = os.getenv('NVIDIA_API_KEY', self.config_data['ai'].get('nvidia_api_key'))
         self.host = self.config_data['server']['host']
@@ -37,4 +33,18 @@ class Config:
         return self.host
 
     def get_port(self):
-        return self.port
+        return self.port        # Load logging configurations
+        self.log_level = self.config_data['logging']['level']
+        self.log_format = self.config_data['logging']['format']
+        self.log_datefmt = self.config_data['logging']['datefmt']
+        self.log_filename = self.config_data['logging']['filename']
+        self.log_filemode = self.config_data['logging']['filemode']
+
+    def get_logging_config(self):
+        return {
+            "level": self.log_level,
+            "format": self.log_format,
+            "datefmt": self.log_datefmt,
+            "filename": self.log_filename,
+            "filemode": self.log_filemode
+        }

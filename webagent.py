@@ -27,7 +27,7 @@ class WebAgent:
         if tool_name == "find_options_button":
             vlm_coords = self.vlm.scan_for_button(self.cur_screenshot, "options")
             if vlm_coords:
-                print(f"Found options button! {vlm_coords}")
+                logging.info(f"Found options button! {vlm_coords}")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:
         stree = ast.parse(call_str)

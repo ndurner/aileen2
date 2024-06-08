@@ -27,7 +27,13 @@
         "agent_lm": "lm_mock",
 
         "_comment_vlm": "The AI model to use for Vision. Values: 'vlm_mock'",
-        "vlm": "vlm_mock"
+        "vlm": "vlm_mock",
+
+        "_comment_lm_ngc": "Configuration for Nvidia NGC",
+        "lm_ngc": {
+            "model": "ibm/granite-8b-code-instruct",
+            "base_url": null
+        }
     },
 
     "_comment_logging": "Configuration for the logging facility",

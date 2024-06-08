@@ -37,3 +37,10 @@ class Config:
             "filename": self.log_filename,
             "filemode": self.log_filemode
         }
+    
+    def get_ngc_config(self):
+        ngc = self.config_data['implementations']['lm_ngc']
+        return {
+            "model": ngc['model'],
+            "base_url": ngc['base_url']
+        }

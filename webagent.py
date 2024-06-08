@@ -25,6 +25,9 @@ class WebAgent:
 
         if tool_name == "get_bundestag_transcript" and tool_args:
             self.get_bundestag_transcript(tool_args[0])
+        elif tool_name == "report_error_to_user":
+            error_msg = "Unknown error" if not tool_args else tool_args[0]
+            self.report_error(error_msg)
 
     def get_bundestag_transcript(self, url: str):
         next_step = self.lm.get_bundestag_transcript(url)
@@ -34,6 +37,13 @@ class WebAgent:
             vlm_coords = self.vlm.scan_for_button(self.cur_screenshot, "options")
             if vlm_coords:
                 logging.info(f"Found options button! {vlm_coords}")
+        elif tool_name == "report_error_to_user":
+            error_msg = "Unknown error" if not tool_args else tool_args[0]
+            self.report_error(error_msg)
+
+    def report_error(self, error_msg: str):
+        # FIXME: how do we send this over SMS?
+        logging.error(f"Cannot operate webpage: {error_msg}")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:
         stree = ast.parse(call_str)

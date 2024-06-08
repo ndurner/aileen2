@@ -1,7 +1,7 @@
 from singleton_decorator import singleton
+from lm import LM
 
-@singleton
-class LM_Mock:
+class LM_Mock(LM):
     """
     Language model mock implementation.
     Canned responses from granite-8b-code-instruct

@@ -1,6 +1,3 @@
-from singleton_decorator import singleton
-
-@singleton
 class LM:
     """Language model implementation"""
 

@@ -12,6 +12,12 @@ TOKENIZER_PATH = os.path.join(TOKENIZER_DIR, "vlm_tokenizer.model")
 class VLM:
     """Visual model implementation"""
 
+    def patch_size(self) -> Tuple[int, int]:
+        """
+        Get the native image patch size
+        """
+        pass
+
     def desc_en(self, image: Image) -> str:
         """
             Describe image in English language

@@ -7,5 +7,6 @@ uvicorn
 twilio
 singleton-decorator
 kagglehub
+selenium
 langchain
 langchain-nvidia-ai-endpoints

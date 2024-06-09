@@ -15,14 +15,13 @@ class LM_NGC(LM):
 
         self.ngc_llm = ChatNVIDIA(api_key = api_key, model = lm_config['model'], temperature = 0, stop = ["Question"])
 
-    def start_agent(self, user_task: str, screenshot_desc: str) -> str:
+    def start_agent(self, user_task: str) -> str:
         """
         Kick-off agentic session by posing the user_task to the LM and
         offering tools.
         Returns the next function call for further processing, e.g. 'get_bundestag_transcript(...)'
         """
 
-        self.screenshot_desc = screenshot_desc
         self.messages = [
             HumanMessage(content = lm_ngc_prompts.agent.format(user_task = user_task)),
         ]
@@ -32,14 +31,14 @@ class LM_NGC(LM):
 
         return response.content
 
-    def get_bundestag_transcript(self, url: str) -> str:
+    def get_bundestag_transcript(self, url: str, screenshot_desc: str) -> str:
         """
         Corresponds to Agent task 'get_bundestag_transcript'.
         Returns the next function call for further processing, e.g. 'find_options_button(...)'
         """
 
         self.messages.extend([HumanMessage(
-            content = lm_ngc_prompts.dl_btag.format(screenshot_description = self.screenshot_desc))])
+            content = lm_ngc_prompts.dl_btag.format(screenshot_description = screenshot_desc))])
 
         response = self.ngc_llm.invoke(self.messages)
         self.messages.extend([response])

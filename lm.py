@@ -1,7 +1,7 @@
 class LM:
     """Language model implementation"""
 
-    def start_agent(self, user_task: str, screenshot_desc: str) -> str:
+    def start_agent(self, user_task: str) -> str:
         """
         Kick-off agentic session by posing the user_task to the LM and
         offering tools.
@@ -9,7 +9,7 @@ class LM:
         """
         pass
 
-    def get_bundestag_transcript(self, url: str) -> str:
+    def get_bundestag_transcript(self, url: str, screenshot_desc: str) -> str:
         """
         Corresponds to Agent task 'get_bundestag_transcript'.
         Returns the next function call for further processing, e.g. 'find_options_button(...)'

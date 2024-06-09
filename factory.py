@@ -4,6 +4,8 @@ from lm_mock import LM_Mock
 from lm_ngc import LM_NGC
 from vlm import VLM
 from vlm_mock import VLM_Mock
+from browser import Browser
+from browser_selenium import Browser_Selenium
 from config import Config
 import logging
 
@@ -28,3 +30,6 @@ class Factory:
             return VLM_Mock()
         else:
             return None
+
+    def provide_browser(self) -> Browser:
+        return Browser_Selenium()

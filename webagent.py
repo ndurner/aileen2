@@ -6,6 +6,7 @@ import ast
 from typing import Any, Tuple
 from PIL import Image
 import logging
+import time
 
 class WebAgent:
     """AI Agent driving tasks"""
@@ -13,14 +14,11 @@ class WebAgent:
     factory = Factory()
     lm = factory.provide_lm()
     vlm = factory.provide_vlm()
-    cur_screenshot = Image.new("RGB", (200, 200))
+    webpage = factory.provide_browser()
 
     def start(self, task_prompt: str):
-        # get web browser screenshot description
-        desc = self.vlm.desc_en(self.cur_screenshot)
-
         # determine next step
-        next_step = self.lm.start_agent(task_prompt, desc)
+        next_step = self.lm.start_agent(task_prompt)
         tool_name, tool_args = self._parse_tool_call(next_step)
 
         if tool_name == "get_bundestag_transcript" and tool_args:
@@ -30,11 +28,21 @@ class WebAgent:
             self.report_error(error_msg)
 
     def get_bundestag_transcript(self, url: str):
-        next_step = self.lm.get_bundestag_transcript(url)
+        # load web page
+        self.webpage.open(url)
+
+        time.sleep(5) # FIXME
+
+        cur_screenshot = self.webpage.screenshot()
+
+        # get web browser screenshot description
+        desc = self.vlm.desc_en(cur_screenshot)
+
+        next_step = self.lm.get_bundestag_transcript(url, desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
 
         if tool_name == "find_options_button":
-            vlm_coords = self.vlm.scan_for_button(self.cur_screenshot, "options")
+            vlm_coords = self.vlm.scan_for_button(cur_screenshot, "options")
             if vlm_coords:
                 logging.info(f"Found options button! {vlm_coords}")
         elif tool_name == "report_error_to_user":

@@ -7,11 +7,15 @@ from typing import Tuple
 from PIL import Image
 import math
 import io
+import os
 
 class Browser_Selenium(Browser):
     def __init__(self):
         from factory import Factory
         
+        # Disable Selenium data collection
+        os.environ["SE_AVOID_STATS"] = "true"
+
         opts = Options()
         opts.add_argument('--headless')  # Runs Chrome in headless mode.
         opts.add_argument('--no-sandbox')  # Bypass OS security model

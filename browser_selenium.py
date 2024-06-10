@@ -12,11 +12,15 @@ class Browser_Selenium(Browser):
     def __init__(self):
         from factory import Factory
         
-        # size browser window approx. XGA resolution (1024x768), aligned to VLM
-        # FIXME: consider High-DPI/Low-DPI
-
         opts = Options()
+        opts.add_argument('--headless')  # Runs Chrome in headless mode.
+        opts.add_argument('--no-sandbox')  # Bypass OS security model
+        opts.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
+        opts.add_argument("--force-device-scale-factor=2")
+        from webdriver_manager.chrome import ChromeDriverManager
+        ChromeDriverManager().install()
         self.driver = webdriver.Chrome(options=opts)
+        # size browser window approx. XGA resolution (1024x768), aligned to VLM
         self.driver.set_window_size(1024, 768)
 
     def open(self, url: str):

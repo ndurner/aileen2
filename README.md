@@ -6,3 +6,7 @@ AI office agent
     - e.g. AWS AMI "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.2 (Ubuntu 20.04)"
         * activate environment with "conda activate pytorch"
 - Chrome installed (for Selenium)
+    1. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    2. sudo apt install ./google-chrome-stable_current_amd64.deb
+
+# Installation

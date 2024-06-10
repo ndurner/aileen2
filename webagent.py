@@ -15,6 +15,7 @@ class WebAgent:
     lm = factory.provide_lm()
     vlm = factory.provide_vlm()
     webpage = factory.provide_browser()
+    debug = False
 
     def start(self, task_prompt: str):
         # determine next step
@@ -34,6 +35,8 @@ class WebAgent:
         time.sleep(5) # FIXME
 
         cur_screenshot = self.webpage.screenshot()
+        if self.debug:
+            cur_screenshot.save("/tmp/screenshot.png")
 
         # get web browser screenshot description
         desc = self.vlm.desc_en(cur_screenshot)

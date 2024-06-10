@@ -1,0 +1,3 @@
+Parses PaliGemma output.
+
+Taken from https://huggingface.co/spaces/big-vision/paligemma/tree/main where it was released under the Apache2 license. See the LICENSE file for the full license text.

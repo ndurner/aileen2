@@ -44,3 +44,9 @@ class Config:
             "model": ngc['model'],
             "base_url": ngc['base_url']
         }
+    
+    def get_vlm_config(self):
+        ngc = self.config_data['implementations']['vlm_local']
+        return {
+            "model": ngc['model'],
+        }

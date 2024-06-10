@@ -10,3 +10,7 @@ kagglehub
 selenium
 langchain
 langchain-nvidia-ai-endpoints
+pillow
+transformers
+flax
+jax

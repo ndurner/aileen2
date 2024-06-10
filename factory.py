@@ -4,6 +4,7 @@ from lm_mock import LM_Mock
 from lm_ngc import LM_NGC
 from vlm import VLM
 from vlm_mock import VLM_Mock
+from vlm_hf import VLM_HF
 from browser import Browser
 from browser_selenium import Browser_Selenium
 from config import Config
@@ -28,6 +29,8 @@ class Factory:
         vlm = self.conf.vlm
         if vlm == "vlm_mock":
             return VLM_Mock()
+        elif vlm == "vlm_hf":
+            return VLM_HF()
         else:
             return None
 

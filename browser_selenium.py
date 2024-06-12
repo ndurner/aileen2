@@ -21,8 +21,6 @@ class Browser_Selenium(Browser):
         opts.add_argument('--no-sandbox')  # Bypass OS security model
         opts.add_argument('--disable-dev-shm-usage')  # Overcome limited resource problems
         opts.add_argument("--force-device-scale-factor=2")
-        from webdriver_manager.chrome import ChromeDriverManager
-        ChromeDriverManager().install()
         self.driver = webdriver.Chrome(options=opts)
         # size browser window approx. XGA resolution (1024x768), aligned to VLM
         self.driver.set_window_size(1024, 768)

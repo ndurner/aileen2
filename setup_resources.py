@@ -3,6 +3,8 @@ import requests
 import argparse
 import vlm
 import requests
+import platform
+from webdriver_manager.chrome import ChromeDriverManager
 
 def download_file_from_url(url, save_path):
     with requests.get(url, stream=True) as response:
@@ -54,3 +56,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     download_vlm_model(args.kaggle_username, args.kaggle_key, args.vlm_model_url)
+
+    # attempt to install Chrome (which fails on macOS as of now)
+    if platform.system() != 'Darwin':
+        ChromeDriverManager().install()

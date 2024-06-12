@@ -2,7 +2,7 @@ from singleton_decorator import singleton
 from PIL import Image
 import os
 from vlm import VLM
-from typing import Tuple
+from typing import Tuple, List
 
 # Configuration
 dump_images = False
@@ -33,7 +33,7 @@ class VLM_Mock(VLM):
         return "a website with videos and a play button"
 #        return "error page"
 
-    def scan_for_button(self, image: Image, button: str) -> Tuple[int, int, int, int]:
+    def scan_for_button(self, image: Image, button: str) -> List[Tuple[int, int, int, int]]:
         """
         Searches for a button that the model recognizes as 'button'.
         Returns button location
@@ -43,7 +43,7 @@ class VLM_Mock(VLM):
         self._iterate_through_patches(image, lambda patch: self.save_patches(patch))
 
         if button == "options":
-            return (20, 20, 40, 40)
+            return [(910, 645, 979, 707)]
         else:
             return None
 

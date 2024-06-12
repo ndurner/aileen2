@@ -48,6 +48,13 @@ class WebAgent:
             vlm_coords = self.vlm.scan_for_button(cur_screenshot, "options")
             if vlm_coords:
                 logging.info(f"Found options button! {vlm_coords}")
+                elem = vlm_coords[0]
+                self._browser_click(elem)
+
+                s = self.webpage.screenshot()
+                if self.debug:
+                    s.save("/tmp/nach-klick.png")
+
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
@@ -66,3 +73,8 @@ class WebAgent:
                 return (tool_name, tool_args)
         
         return (None, None)
+    
+    def _browser_click(self, elem: Tuple[int, int, int, int]):
+        coords = (((elem[0] + ((elem[2] - elem[0]) / 2.0)) / 2.0),
+                  ((elem[1] + ((elem[3] - elem[1]) / 2.0)) / 2.0))
+        self.webpage.click(coords)

@@ -43,6 +43,7 @@ class Browser_Selenium(Browser):
         action.pointer_action.move_to_location(coords[0], coords[1])
         action.pointer_action.click()
         action.perform()
+        ActionChains(self.driver).pause(0.5).perform()
 
     def screenshot(self) -> Image:
         """

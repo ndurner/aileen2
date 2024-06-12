@@ -1,7 +1,7 @@
 from singleton_decorator import singleton
 from PIL import Image, ImageDraw
 import os
-from typing import Tuple
+from typing import Tuple, List
 import numpy as np
 import re
 
@@ -26,7 +26,7 @@ class VLM:
         """
         pass
 
-    def scan_for_button(self, image: Image, button: str) -> list:
+    def scan_for_button(self, image: Image, button: str) -> List[Tuple[int, int, int, int]]:
         """
         Searches for a button that the model recognizes as 'button'.
         Accumulates results from patches where the button is found.

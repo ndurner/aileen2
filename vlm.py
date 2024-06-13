@@ -41,6 +41,12 @@ class VLM:
         """
         pass
 
+    def question(self, question: str) -> str:
+        """
+        Answer a question on the image
+        """
+        pass
+
     def _iterate_through_patches(self, image, process_patch, terminate_on_find=False, **kwargs):
         patch_size = self.patch_size()[0]  # Assuming square patches
         stride = patch_size // 2

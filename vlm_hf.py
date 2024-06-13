@@ -27,6 +27,12 @@ class VLM_HF(VLM):
         """
         return self._run_pali(image, "Describe the image including any text")
 
+    def question(self, question: str) -> str:
+        """
+        Answer a question on the image
+        """
+        return self._run_pali(question)
+
     def check_patch_for_button(self, patch: Image, button: str) -> str:
         if button == "options":
             return self._find_options(patch)

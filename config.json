@@ -29,6 +29,9 @@
         "_comment_vlm": "The AI model to use for Vision. Values: 'vlm_mock', 'vlm_hf'",
         "vlm": "vlm_mock",
 
+        "_comment_ocr": "The AI model/system to use for OCR. Values: 'ocr_mock', 'ocr_easyocr'",
+        "ocr": "ocr_mock",
+
         "_comment_lm_ngc": "Configuration for Nvidia NGC",
         "lm_ngc": {
             "model": "meta/llama3-8b-instruct",

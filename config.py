@@ -21,6 +21,7 @@ class Config:
         self.port = self.config_data['server']['port']
         self.lm = self.config_data['implementations']['agent_lm']
         self.vlm = self.config_data['implementations']['vlm']
+        self.ocr = self.config_data['implementations']['ocr']
 
         # Load logging configurations
         self.log_level = self.config_data['logging']['level']

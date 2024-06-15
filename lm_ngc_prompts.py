@@ -119,3 +119,34 @@ def report_error_to_user(error_msg: str)
 
     :error_msg str: the text to be sent to the user
 """'''
+
+process_text_setup = """Your task is to build a personalized text summary for a user who has this profile:
+``` user profile
+{user_profile}
+```
+
+Summarize this text:
+``` input text
+{text}
+```
+
+Get straight to work on the user's summarization request. Reply to the user directly. To ensure a stellar work result, take into consideration the user's profile.
+Ensure that your results are grounded in the text you have been given to work on. Avoid using any prior knowledge our outside information
+you may have."""
+
+process_text_refine = """Your task is to build a personalized text summary for a user who has this profile:
+``` user profile
+{user_profile}
+```
+
+You have already completed summarizing the first part of the original document. This is your intermediate result, based on the first part of the original document:
+``` intermediate summary
+{existing_part}
+```
+
+Now, here's the next part of the text to be summarized:
+``` partial input document
+{text}
+```
+Use this yet unprocessed document part to extend and refine your prior intermediate summary. Ensure you return the fully refined summary whole, complete and self-contained, taking into account the user's profile. Reply to the user directly.
+Avoid using any prior knowledge our outside information you may have. """

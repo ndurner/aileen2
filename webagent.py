@@ -7,6 +7,7 @@ from typing import Any, Tuple
 from PIL import Image
 import logging
 import time
+import srt2txt
 
 class WebAgent:
     """AI Agent driving tasks"""
@@ -18,8 +19,11 @@ class WebAgent:
     debug = False
     ocr = factory.provide_ocr()
 
+    target_audience = ""
 
-    def start(self, task_prompt: str):
+    def start(self, task_prompt: str, target_audience: str = "(unknown)"):
+        self.target_audience = target_audience
+
         # determine next step
         next_step = self.lm.start_agent(task_prompt)
         tool_name, tool_args = self._parse_tool_call(next_step)
@@ -110,6 +114,16 @@ class WebAgent:
                 logging.info(f"Found confirm button! {confirm_coords}")
                 elem = confirm_coords[0]
                 self._browser_click(elem)
+
+                self.summarize()
+
+    def summarize(self):
+        dl_fn, payload = self.webpage.get_latest_download()
+        if dl_fn.endswith(".srt"):
+            payload = srt2txt.process(payload)
+
+        resp = self.lm.summarize_for_audience(payload, self.target_audience)
+        logging.info(f"summarization result: {resp}")
 
     def report_error(self, error_msg: str):
         # FIXME: how do we send this over SMS?

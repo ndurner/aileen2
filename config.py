@@ -22,6 +22,7 @@ class Config:
         self.lm = self.config_data['implementations']['agent_lm']
         self.vlm = self.config_data['implementations']['vlm']
         self.ocr = self.config_data['implementations']['ocr']
+        self.user_profiles = self.config_data["users"]
 
         # Load logging configurations
         self.log_level = self.config_data['logging']['level']
@@ -43,7 +44,11 @@ class Config:
         ngc = self.config_data['implementations']['lm_ngc']
         return {
             "model": ngc['model'],
-            "base_url": ngc['base_url']
+            "base_url": ngc['base_url'],
+            "summarizer": {
+                "model": ngc['summarizer']['model'],
+                "base_url": ngc['summarizer']['base_url'],
+            }
         }
     
     def get_vlm_config(self):

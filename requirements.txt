@@ -16,3 +16,4 @@ flax
 jax
 webdriver-manager
 easyocr
+sentencepiece

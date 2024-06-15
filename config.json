@@ -35,7 +35,12 @@
         "_comment_lm_ngc": "Configuration for Nvidia NGC",
         "lm_ngc": {
             "model": "meta/llama3-8b-instruct",
+            "base_url": null,
+
+            "summarizer": {
+                "model": "google/gemma-7b",
             "base_url": null
+            }
         },
 
         "_comment_vlm_local": "Configuration for the Vision Model",
@@ -51,5 +56,12 @@
         "datefmt": "%Y-%m-%d %H:%M:%S",
         "filename": "app.log",
         "filemode": "w"
+    },
+
+    "_comment_users": "User profiles",
+    "users": {
+        "+18005550100": {
+            "profile": "Software Engineer"
+        }
     }
 }

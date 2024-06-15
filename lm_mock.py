@@ -48,8 +48,8 @@ class LM_Mock(LM):
 
         return 'find_confirm_button()'
 
-    def process_input_text(self, payload_input_text: str, task_description: str, target_audience: str) -> str:
+    def summarize_for_audience(self, payload_input_text: str, target_audience: str) -> str:
         """
-        Process, e.g. summarize, a long text for a specific audience
+        Summarize a long text for a specific audience
         """
         return "Mock LM text processing response"

@@ -15,3 +15,17 @@ class LM:
         Returns the next function call for further processing, e.g. 'find_options_button(...)'
         """
         pass
+
+    def get_subtitles_btn(self, screenshot_desc: str) -> str:
+        """
+        Corresponds to Agent task 'get_subtitles_btn'.
+        Returns the next function call for further processing, e.g. 'find_subtitles_button(...)'
+        """
+        pass
+
+    def get_confirm_btn(self, screenshot_desc: str) -> str:
+        """
+        Corresponds to Agent task 'get_confirmation_btn'.
+        Returns the next function call for further processing, e.g. 'find_confirmation_button(...)'
+        """
+        pass

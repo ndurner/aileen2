@@ -16,6 +16,8 @@ class WebAgent:
     vlm = factory.provide_vlm()
     webpage = factory.provide_browser()
     debug = False
+    ocr = factory.provide_ocr()
+
 
     def start(self, task_prompt: str):
         # determine next step
@@ -51,13 +53,63 @@ class WebAgent:
                 elem = vlm_coords[0]
                 self._browser_click(elem)
 
-                s = self.webpage.screenshot()
-                if self.debug:
-                    s.save("/tmp/nach-klick.png")
+                self.get_dl_btn()
 
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
+
+    def get_dl_btn(self):
+        cur_screenshot = self.webpage.screenshot()
+        if self.debug:
+            cur_screenshot.save("/tmp/nach-klick.png")
+
+        desc = self.vlm.desc_en(cur_screenshot)
+        next_step = self.lm.get_dl_btn(desc)
+        tool_name, tool_args = self._parse_tool_call(next_step)
+
+        if tool_name == "find_download_button":
+            vlm_coords = self.vlm.scan_for_button(cur_screenshot, "download")
+            if vlm_coords:
+                logging.info(f"Found downloads button! {vlm_coords}")
+                elem = vlm_coords[0]
+                self._browser_click(elem)
+
+                self.get_subtitles_btn()
+
+    def get_subtitles_btn(self):
+        cur_screenshot = self.webpage.screenshot()
+        if self.debug:
+            cur_screenshot.save("/tmp/nach-klick.png")
+
+        desc = self.vlm.desc_en(cur_screenshot)
+        next_step = self.lm.get_subtitles_btn(desc)
+        tool_name, tool_args = self._parse_tool_call(next_step)
+
+        if tool_name == "find_subtitles_button":
+            srt_coords = self.ocr.scan_for_text(cur_screenshot, "Untertitel")
+            if srt_coords:
+                logging.info(f"Found downloads button! {srt_coords}")
+                elem = srt_coords[0]
+                self._browser_click(elem)
+
+                self.get_confirm_btn()
+
+    def get_confirm_btn(self):
+        cur_screenshot = self.webpage.screenshot()
+        if self.debug:
+            cur_screenshot.save("/tmp/nach-klick.png")
+
+        desc = self.vlm.desc_en(cur_screenshot)
+        next_step = self.lm.get_confirm_btn(desc)
+        tool_name, tool_args = self._parse_tool_call(next_step)
+
+        if tool_name == "find_confirm_button":
+            confirm_coords = self.ocr.scan_for_text(cur_screenshot, "Ja und herunterladen")
+            if confirm_coords:
+                logging.info(f"Found confirm button! {confirm_coords}")
+                elem = confirm_coords[0]
+                self._browser_click(elem)
 
     def report_error(self, error_msg: str):
         # FIXME: how do we send this over SMS?

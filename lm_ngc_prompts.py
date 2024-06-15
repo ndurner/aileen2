@@ -62,3 +62,60 @@ Avoid returning anything in addition to Python tool-calling code, e.g. explainer
 Examples:
 find_options_button()
 report_error_to_user("Website unreachable")'''
+
+dl_btn = '''The webpage now looks like this:
+###
+{screenshot_description}
+###
+
+You now have the following tools available:
+###
+def find_download_button() -> str
+    """
+        Get the pixels coordinates of the download button
+    """
+
+def report_error_to_user(error_msg: str)
+"""
+    Report an error to the our customer (human user) in case of unrecoverable failure
+
+    :error_msg str: the text to be sent to the user
+"""'''
+
+subtitles_btn = '''The webpage now looks like this:
+###
+{screenshot_description}
+###
+
+You now have the following tools available:
+###
+def find_subtitles_button() -> str
+    """
+        Get the pixels coordinates of the subtitles button
+    """
+
+def report_error_to_user(error_msg: str)
+"""
+    Report an error to the our customer (human user) in case of unrecoverable failure
+
+    :error_msg str: the text to be sent to the user
+"""'''
+
+confirm_btn = '''The webpage now looks like this:
+###
+{screenshot_description}
+###
+
+You now have the following tools available:
+###
+def find_confirm_button() -> str
+    """
+        Get the pixels coordinates of the confirmation button
+    """
+
+def report_error_to_user(error_msg: str)
+"""
+    Report an error to the our customer (human user) in case of unrecoverable failure
+
+    :error_msg str: the text to be sent to the user
+"""'''

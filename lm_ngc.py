@@ -43,4 +43,46 @@ class LM_NGC(LM):
         response = self.ngc_llm.invoke(self.messages)
         self.messages.extend([response])
 
+    
+    def get_dl_btn(self, screenshot_desc: str) -> str:
+        """
+        Corresponds to Agent task 'get_dl_btn'.
+        Returns the next function call for further processing, e.g. 'find_download_button(...)'
+        """
+
+        self.messages.extend([HumanMessage(
+            content = lm_ngc_prompts.dl_btn.format(screenshot_description = screenshot_desc))])
+
+        response = self.ngc_llm.invoke(self.messages)
+        self.messages.extend([response])
+
         return response.content
+    
+    def get_subtitles_btn(self, screenshot_desc: str) -> str:
+        """
+        Corresponds to Agent task 'get_dl_btn'.
+        Returns the next function call for further processing, e.g. 'find_download_button(...)'
+        """
+
+        self.messages.extend([HumanMessage(
+            content = lm_ngc_prompts.subtitles_btn.format(screenshot_description = screenshot_desc))])
+
+        response = self.ngc_llm.invoke(self.messages)
+        self.messages.extend([response])
+
+        return response.content
+
+    def get_confirm_btn(self, screenshot_desc: str) -> str:
+        """
+        Corresponds to Agent task 'get_dl_btn'.
+        Returns the next function call for further processing, e.g. 'find_download_button(...)'
+        """
+
+        self.messages.extend([HumanMessage(
+            content = lm_ngc_prompts.confirm_btn.format(screenshot_description = screenshot_desc))])
+
+        response = self.ngc_llm.invoke(self.messages)
+        self.messages.extend([response])
+
+        return response.content
+

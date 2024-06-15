@@ -64,7 +64,7 @@ class WebAgent:
         logging.error(f"Cannot operate webpage: {error_msg}")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:
-        stree = ast.parse(call_str)
+        stree = ast.parse(call_str.strip())
         for node in ast.walk(stree):
             if isinstance(node, ast.Call):
                 tool_name = node.func.id

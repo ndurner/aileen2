@@ -14,7 +14,7 @@ class LM_Mock(LM):
         Returns the next function call for further processing, e.g. 'get_bundestag_transcript(...)'
         """
         
-        return 'get_bundestag_transcript("https://dbtg.tv/cvid/7611790")'
+        return 'get_bundestag_transcript("https://dbtg.tv/cvid/7611506")'
 
     def get_bundestag_transcript(self, url: str, screenshot_desc: str) -> str:
         """

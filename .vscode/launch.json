@@ -16,7 +16,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
-            "args": ["--task=\"Summarize https://dbtg.tv/cvid/7610880\""],
+            "args": ["--task=\"Summarize https://dbtg.tv/cvid/7611506\""],
             "console": "integratedTerminal"
           }
         ]

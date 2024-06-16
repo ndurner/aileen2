@@ -71,7 +71,7 @@ class WebAgent:
     def get_dl_btn(self):
         cur_screenshot = self.webpage.screenshot()
         if self.debug:
-            cur_screenshot.save("/tmp/nach-klick.png")
+            cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
         next_step = self.lm.get_dl_btn(desc)
@@ -85,11 +85,14 @@ class WebAgent:
                 self._browser_click(elem)
 
                 self.get_subtitles_btn()
+        elif tool_name == "report_error_to_user":
+            error_msg = "Unknown error" if not tool_args else tool_args[0]
+            self.report_error(error_msg)
 
     def get_subtitles_btn(self):
         cur_screenshot = self.webpage.screenshot()
         if self.debug:
-            cur_screenshot.save("/tmp/nach-klick.png")
+            cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
         next_step = self.lm.get_subtitles_btn(desc)
@@ -103,11 +106,14 @@ class WebAgent:
                 self._browser_click(elem)
 
                 self.get_confirm_btn()
+        elif tool_name == "report_error_to_user":
+            error_msg = "Unknown error" if not tool_args else tool_args[0]
+            self.report_error(error_msg)
 
     def get_confirm_btn(self):
         cur_screenshot = self.webpage.screenshot()
         if self.debug:
-            cur_screenshot.save("/tmp/nach-klick.png")
+            cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
         next_step = self.lm.get_confirm_btn(desc)
@@ -121,6 +127,9 @@ class WebAgent:
                 self._browser_click(elem)
 
                 self.summarize()
+        elif tool_name == "report_error_to_user":
+            error_msg = "Unknown error" if not tool_args else tool_args[0]
+            self.report_error(error_msg)
 
     def summarize(self):
         dl_fn, payload = self.webpage.get_latest_download()
@@ -134,8 +143,10 @@ class WebAgent:
             self.email_sender.send_email(self.user_email, "Meeting summary", resp)
 
     def report_error(self, error_msg: str):
-        # FIXME: how do we send this over SMS?
         log.error(f"Cannot operate webpage: {error_msg}")
+
+        if self.user_email:
+            self.email_sender.send_email(self.user_email, "Error", "An error has occured. Please check the logs.")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:
         stree = ast.parse(call_str.strip())

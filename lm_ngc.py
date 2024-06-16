@@ -16,7 +16,7 @@ class LM_NGC(LM):
 
         lm_config = general_config.get_ngc_config()
         lm_config_sum = lm_config['summarizer']
-        self.max_out_tokens = 1000 # FIXME
+        self.max_out_tokens = 1000      # adaptively refined during processing
 
         self.ngc_llm = ChatNVIDIA(api_key = api_key, model = lm_config['model'], temperature = 0.1)
         self.ngc_llm_sum = ChatNVIDIA(api_key = api_key, model = lm_config_sum['model'], temperature = 0.7, max_tokens = self.max_out_tokens)
@@ -105,7 +105,12 @@ class LM_NGC(LM):
             "user_profile": target_audience
         })
 
-        tok = AutoTokenizer.from_pretrained(self.get_tokenizer_for_model(self.ngc_llm_sum.model))
+        try:
+            tok = AutoTokenizer.from_pretrained(self.get_tokenizer_for_model(self.ngc_llm_sum.model))
+        except:
+            # conservative fallback, just in case
+            tok = AutoTokenizer.from_pretrained("google-bert/bert-base-cased")
+
         tok_prompt = tok.encode(prompt_template.format(text = "", part_number="183"))
         tok_refine = tok.encode(refine_prompt_template.format(text = "", existing_part = "", part_number="183"))
         max_split_len = self.get_ctx_len_for_model(self.ngc_llm_sum.model) - max([len(tok_prompt), len(tok_refine)]) - self.max_out_tokens
@@ -117,8 +122,10 @@ class LM_NGC(LM):
         summary = str()
         for idx, split in enumerate(split_text):
             prompt = template.format_prompt(text = split, part_number = idx + 1)
+            prompt_len = len(tok.encode(prompt.to_string()))
 
-            response = self.ngc_llm_sum.invoke(prompt)
+            max_tokens = self.get_out_len_for_model(self.ngc_llm_sum.model) - self.get_overhead_for_model(self.ngc_llm_sum.model) - prompt_len
+            response = self.ngc_llm_sum.invoke(prompt, max_tokens = max_tokens)
             summary = response.content
 
             template = refine_prompt_template.partial(existing_part = summary)

@@ -23,8 +23,25 @@ class LM:
             "mistralai/mixtral-8x22b-instruct-v0.1": 21100, # roughly
             "mistralai/mixtral-8x22b-v0.1": 21100, # roughly
             "mistralai/mixtral-8x7b-instruct-v0.1": 16384,
-        }.get(model)
-    
+        }.get(model, 4096)
+
+    def get_out_len_for_model(self, model: str) -> int:
+        return {
+            "microsoft/phi-3-medium-4k-instruct": 1024,
+            "microsoft/phi-3-mini-128k-instruct": 2048,
+            "microsoft/phi-3-mini-4k-instruct": 2048,
+            "microsoft/phi-3-small-128k-instruct": 2048,
+            "microsoft/phi-3-small-8k-instruct": 2048,
+        }.get(model, self.get_ctx_len_for_model(model))
+
+    def get_overhead_for_model(self, model: str) -> int:
+        return {
+            "ibm/granite-34b-code-instruct": 9,
+            "ibm/granite-8b-code-instruct": 9,
+            "meta/llama3-70b-instruct": 10,
+            "meta/llama3-8b-instruct": 10,
+        }.get(model, 0)
+
     def get_tokenizer_for_model(self, model: str) -> str:
         return {
             "google/codegemma-1.1-7b": "philschmid/gemma-tokenizer-chatml",

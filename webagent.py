@@ -5,10 +5,12 @@ from factory import Factory
 import ast
 from typing import Any, Tuple
 from PIL import Image
-import logging
+import mylog
 import time
 import srt2txt
 from emailsender import EMailSender
+
+log = mylog.getLogger(__name__)
 
 class WebAgent:
     """AI Agent driving tasks"""
@@ -56,7 +58,7 @@ class WebAgent:
         if tool_name == "find_options_button":
             vlm_coords = self.vlm.scan_for_button(cur_screenshot, "options")
             if vlm_coords:
-                logging.info(f"Found options button! {vlm_coords}")
+                log.info(f"Found options button! {vlm_coords}")
                 elem = vlm_coords[0]
                 self._browser_click(elem)
 
@@ -78,7 +80,7 @@ class WebAgent:
         if tool_name == "find_download_button":
             vlm_coords = self.vlm.scan_for_button(cur_screenshot, "download")
             if vlm_coords:
-                logging.info(f"Found downloads button! {vlm_coords}")
+                log.info(f"Found downloads button! {vlm_coords}")
                 elem = vlm_coords[0]
                 self._browser_click(elem)
 
@@ -96,7 +98,7 @@ class WebAgent:
         if tool_name == "find_subtitles_button":
             srt_coords = self.ocr.scan_for_text(cur_screenshot, "Untertitel")
             if srt_coords:
-                logging.info(f"Found downloads button! {srt_coords}")
+                log.info(f"Found downloads button! {srt_coords}")
                 elem = srt_coords[0]
                 self._browser_click(elem)
 
@@ -114,7 +116,7 @@ class WebAgent:
         if tool_name == "find_confirm_button":
             confirm_coords = self.ocr.scan_for_text(cur_screenshot, "Ja und herunterladen")
             if confirm_coords:
-                logging.info(f"Found confirm button! {confirm_coords}")
+                log.info(f"Found confirm button! {confirm_coords}")
                 elem = confirm_coords[0]
                 self._browser_click(elem)
 
@@ -126,14 +128,14 @@ class WebAgent:
             payload = srt2txt.process(payload)
 
         resp = self.lm.summarize_for_audience(payload, self.target_audience)
-        logging.info(f"summarization result: {resp}")
+        log.info(f"summarization result: {resp}")
 
         if self.user_email:
             self.email_sender.send_email(self.user_email, "Meeting summary", resp)
 
     def report_error(self, error_msg: str):
         # FIXME: how do we send this over SMS?
-        logging.error(f"Cannot operate webpage: {error_msg}")
+        log.error(f"Cannot operate webpage: {error_msg}")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:
         stree = ast.parse(call_str.strip())

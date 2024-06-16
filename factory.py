@@ -11,7 +11,9 @@ from ocr_easyocr import OCR_EasyOCR
 from browser import Browser
 from browser_selenium import Browser_Selenium
 from config import Config
-import logging
+import mylog
+
+log = mylog.getLogger(__name__)
 
 @singleton
 class Factory:
@@ -25,7 +27,7 @@ class Factory:
         elif lm == "lm_ngc":
             return LM_NGC()
         else:
-            logging.error(f"LM '{lm}' not found")
+            log.error(f"LM '{lm}' not found")
             return None
         
     def provide_vlm(self) -> VLM:

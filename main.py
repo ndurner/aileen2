@@ -1,6 +1,6 @@
 import argparse
 from webagent import WebAgent
-import logging
+import mylog
 from config import Config
 
 def handle_command_line_args() -> dict:
@@ -18,25 +18,11 @@ def handle_command_line_args() -> dict:
     return {"task": args.task,
             "profile_id": args.profile_id}
 
-def setup_logging(config: dict):
-    logging.basicConfig(
-        level=logging.getLevelName(config['level']),
-        format=config['format'],
-        datefmt=config['datefmt'],
-        filename=config['filename'],
-        filemode=config['filemode']
-    )
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    formatter = logging.Formatter(config['format'])
-    console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
-
 if __name__ == "__main__":
     config = Config()
-    setup_logging(config.get_logging_config())
-    logger = logging.getLogger(__name__)
+    mylog.setup_logging()
 
+    logger = mylog.getLogger(__name__)
     logger.info("Starting application")
 
     dict = handle_command_line_args()

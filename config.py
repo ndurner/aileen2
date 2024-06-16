@@ -26,25 +26,9 @@ class Config:
         self.ocr = self.config_data['implementations']['ocr']
         self.user_profiles = self.config_data["users"]
 
-        # Load logging configurations
-        self.log_level = self.config_data['logging']['level']
-        self.log_format = self.config_data['logging']['format']
-        self.log_datefmt = self.config_data['logging']['datefmt']
-        self.log_filename = self.config_data['logging']['filename']
-        self.log_filemode = self.config_data['logging']['filemode']
-
         # Load email configurations
         self.email_sender_name = self.config_data['email'].get('sender_name')
         self.email_sender_email = self.config_data['email'].get('sender_email')
-
-    def get_logging_config(self):
-        return {
-            "level": self.log_level,
-            "format": self.log_format,
-            "datefmt": self.log_datefmt,
-            "filename": self.log_filename,
-            "filemode": self.log_filemode
-        }
     
     def get_ngc_config(self):
         ngc = self.config_data['implementations']['lm_ngc']

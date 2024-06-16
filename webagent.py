@@ -8,6 +8,7 @@ from PIL import Image
 import logging
 import time
 import srt2txt
+from emailsender import EMailSender
 
 class WebAgent:
     """AI Agent driving tasks"""
@@ -18,11 +19,13 @@ class WebAgent:
     webpage = factory.provide_browser()
     debug = False
     ocr = factory.provide_ocr()
+    email_sender = EMailSender()
 
     target_audience = ""
 
-    def start(self, task_prompt: str, target_audience: str = "(unknown)"):
-        self.target_audience = target_audience
+    def start(self, task_prompt: str, user_profile: dict):
+        self.target_audience = user_profile.get("profile", "(unknown)")
+        self.user_email = user_profile.get("email")
 
         # determine next step
         next_step = self.lm.start_agent(task_prompt)
@@ -124,6 +127,9 @@ class WebAgent:
 
         resp = self.lm.summarize_for_audience(payload, self.target_audience)
         logging.info(f"summarization result: {resp}")
+
+        if self.user_email:
+            self.email_sender.send_email(self.user_email, "Meeting summary", resp)
 
     def report_error(self, error_msg: str):
         # FIXME: how do we send this over SMS?

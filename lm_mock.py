@@ -52,4 +52,20 @@ class LM_Mock(LM):
         """
         Summarize a long text for a specific audience
         """
-        return "Mock LM text processing response"
+        return """## Text Summary:
+
+**Digital Committee Meeting Summary:**
+
+**Background:**
+
+The Digital Committee discussed [...]
+
+**Key Findings:**
+
+* Affordability concerns
+* Accessibility disparities
+* Technological advancements
+
+**Conclusion:**
+
+The committee emphasized the iterative approach in evaluating and refining digitalization programs, while seeking to streamline the process and reduce bureaucratic burden."""

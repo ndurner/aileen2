@@ -17,6 +17,8 @@ class Config:
         # Load other configurations
         self.twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN', self.config_data['server'].get('twilio_auth_token'))
         self.nvidia_api_key = os.getenv('NVIDIA_API_KEY', self.config_data['ai'].get('nvidia_api_key'))
+        self.aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID', self.config_data['server'].get('aws_access_key_id'))
+        self.aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY', self.config_data['server'].get('aws_secret_access_key'))
         self.host = self.config_data['server']['host']
         self.port = self.config_data['server']['port']
         self.lm = self.config_data['implementations']['agent_lm']
@@ -30,6 +32,10 @@ class Config:
         self.log_datefmt = self.config_data['logging']['datefmt']
         self.log_filename = self.config_data['logging']['filename']
         self.log_filemode = self.config_data['logging']['filemode']
+
+        # Load email configurations
+        self.email_sender_name = self.config_data['email'].get('sender_name')
+        self.email_sender_email = self.config_data['email'].get('sender_email')
 
     def get_logging_config(self):
         return {
@@ -55,4 +61,10 @@ class Config:
         ngc = self.config_data['implementations']['vlm_local']
         return {
             "model": ngc['model'],
+        }
+
+    def get_email_config(self):
+        return {
+            "sender_name": self.email_sender_name,
+            "sender_email": self.email_sender_email
         }

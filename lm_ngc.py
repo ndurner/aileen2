@@ -106,8 +106,8 @@ class LM_NGC(LM):
         })
 
         tok = AutoTokenizer.from_pretrained(self.get_tokenizer_for_model(self.ngc_llm_sum.model))
-        tok_prompt = tok.encode(prompt_template.format(text = ""))
-        tok_refine = tok.encode(refine_prompt_template.format(text = "", existing_part = ""))
+        tok_prompt = tok.encode(prompt_template.format(text = "", part_number="183"))
+        tok_refine = tok.encode(refine_prompt_template.format(text = "", existing_part = "", part_number="183"))
         max_split_len = self.get_ctx_len_for_model(self.ngc_llm_sum.model) - max([len(tok_prompt), len(tok_refine)]) - self.max_out_tokens
 
         text_splitter = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(tok, chunk_size = max_split_len, chunk_overlap = 0)
@@ -115,8 +115,8 @@ class LM_NGC(LM):
 
         template = prompt_template
         summary = str()
-        for split in split_text:
-            prompt = template.format_prompt(text = split)
+        for idx, split in enumerate(split_text):
+            prompt = template.format_prompt(text = split, part_number = idx + 1)
 
             response = self.ngc_llm_sum.invoke(prompt)
             summary = response.content

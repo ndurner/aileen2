@@ -61,7 +61,14 @@
     "_comment_users": "User profiles",
     "users": {
         "+18005550100": {
-            "profile": "Software Engineer"
+            "profile": "Software Engineer",
+            "email": "ndurner@example.invalid"
         }
+    },
+
+    "_comment_email": "E-Mail sending settings",
+    "email": {
+        "sender_name": "Aileen Neumann",
+        "sender_email": "aileen@example.invalid"
     }
 }

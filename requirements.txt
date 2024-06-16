@@ -17,3 +17,5 @@ jax
 webdriver-manager
 easyocr
 sentencepiece
+boto3
+markdown

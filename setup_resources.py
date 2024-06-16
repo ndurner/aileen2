@@ -1,62 +1,58 @@
 import os
 import requests
 import argparse
-import vlm
-import requests
+import tarfile
 import platform
-from webdriver_manager.chrome import ChromeDriverManager
+from config import Config
 
-def download_file_from_url(url, save_path):
+general_config = Config()
+vlm_config = general_config.get_vlm_config()
+
+def download_vlm_from_url(url, save_path):
+    print("Downloading VLM...")
     with requests.get(url, stream=True) as response:
         response.raise_for_status()  # Check for request errors
         with open(save_path, 'wb') as file:
             for chunk in response.iter_content(chunk_size=8192):
                 file.write(chunk)
     print(f"Downloaded from {url} to {save_path}")
+    
+    # Check if the downloaded file is a tar file and extract it
+    if tarfile.is_tarfile(save_path):
+        extract_vlm_dl(save_path)
+
+def extract_vlm_dl(tar_path):
+    # Define the target directory for extraction
+    target_dir = os.path.expanduser("~/.cache/huggingface/hub/models--google--paligemma-3b-mix-448/")
+    os.makedirs(target_dir, exist_ok=True)  # Ensure the target directory exists
+    
+    with tarfile.open(tar_path, "r") as tar:
+        tar.extractall(path=target_dir)
+    print(f"Extracted {tar_path} to {target_dir}")
 
 def download_vlm_model(kaggle_username, kaggle_key, model_url=None):
+    from transformers import PaliGemmaForConditionalGeneration, PaliGemmaProcessor
+    PaliGemmaForConditionalGeneration.from_pretrained(vlm_config["model"])
+    PaliGemmaProcessor.from_pretrained(vlm_config["model"])
 
-    if not os.path.exists(vlm.MODEL_PATH):
-        if not (args.kaggle_username or args.vlm_model_url):
-            print("Warning: neither --kaggle-username/--kaggle-key nor --vlm-model-url given. Downloading VLM may fail.")
-
-        if not os.path.exists(vlm.MODEL_DIR):
-            os.makedirs(vlm.MODEL_DIR)
-        
-        if model_url:
-            print(f"Downloading VLM checkpoint from {model_url}...")
-            download_file_from_url(model_url, vlm.MODEL_PATH)
-        else:
-            print(f"Downloading VLM checkpoint from Kaggle...")
-            if kaggle_username and kaggle_key:
-                os.environ['KAGGLE_USERNAME'] = kaggle_username
-                os.environ['KAGGLE_KEY'] = kaggle_key
-            print("Downloading the checkpoint from Kaggle, this could take a few minutes....")
-            if not os.path.exists(vlm.MODEL_DIR):
-                os.makedirs(vlm.MODEL_DIR)
-
-            import kagglehub
-            MODEL_PATH = kagglehub.model_download('google/paligemma/jax/paligemma-3b-mix-448',
-                                                  "./paligemma-3b-mix-448.bf16.npz")
-            os.rename("./paligemma-3b-mix-448.bf16.npz", vlm.MODEL_PATH)
-
-    # Download tokenizer
-    if not os.path.exists(vlm.TOKENIZER_PATH):
-        print("Downloading the model tokenizer...")
-        if not os.path.exists(vlm.TOKENIZER_DIR):
-            os.makedirs(vlm.TOKENIZER_DIR)
-        os.system(f"gsutil cp gs://big_vision/paligemma_tokenizer.model {vlm.TOKENIZER_PATH}")
-        print(f"Tokenizer path: {vlm.TOKENIZER_PATH}")
+def setup_ocr():
+    import easyocr
+    easyocr.Reader(['de'])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download model and tokenizer")
-    parser.add_argument("--kaggle-username", required=False, help="Kaggle username")
-    parser.add_argument("--kaggle-key", required=False, help="Kaggle API key")
     parser.add_argument("--vlm-model-url", required=False, help="Direct URL to download the model")
     args = parser.parse_args()
 
-    download_vlm_model(args.kaggle_username, args.kaggle_key, args.vlm_model_url)
+    if args.vlm_model_url:
+        if args.vlm_model_url.startswith("http"):
+            download_vlm_from_url(args.vlm_model_url, "/tmp/paligemma.tar")
+        else:
+            extract_vlm_dl(args.vlm_model_url)
+    else:
+        download_vlm_model()
 
-    # attempt to install Chrome (which fails on macOS as of now)
+    # Attempt to install Chrome (which fails on macOS as of now)
     if platform.system() != 'Darwin':
+        from webdriver_manager.chrome import ChromeDriverManager
         ChromeDriverManager().install()

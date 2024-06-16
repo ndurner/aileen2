@@ -1,15 +1,85 @@
 # Aileen 2.0 - AI Office Agent
 Welcome to Aileen 2.0! Aileen is an AI office agent designed to assist with specific tasks, currently focused on summarizing legislative proceedings broadcast by Germany's parliamentary TV. Leveraging recent advances in transformer technology, Aileen can navigate and adapt to changes in web environments autonomously, providing personalized summaries via email to authorized users.
 
-Please note that Aileen 2.0 is specialized for this single use-case and is not yet a general-purpose AI assistant. We are continuously working on expanding her capabilities and look forward to future developments.
+Please note that Aileen 2.0 is specialized for this single use-case and is not (yet?) a general-purpose AI assistant.
 
 # Prerequisites
+- Ubuntu GNU/Linux, Python 3
+- [Nvidia NGC API key](https://docs.nvidia.com/ai-enterprise/deployment-guide-spark-rapids-accelerator/0.1.0/appendix-ngc.html)
 - Nvidia CUDA and Pytorch set up
-    - e.g. AWS AMI "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.2 (Ubuntu 20.04)"
-        * activate environment with "conda activate pytorch"
-    - Tested using Nvidia T4 GPU (AWS instance type: g4dn.xlarge)
+    - Option 1: Amazon Web Services:
+        * AMI: "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.3 (Ubuntu 20.04)"
+            * activate environment with "conda activate pytorch"
+        * Instance type: g4dn.xlarge
+            * (provides Nvidia T4)
 - Chrome installed (for Selenium)
     1. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     2. sudo apt install ./google-chrome-stable_current_amd64.deb
+- Internet connection for Installation below
 
 # Installation
+0. (ensure that your PyTorch enabled venv is enabled)
+    * conda activate pytorch
+1. download this repository:
+    * git clone --depth 1 https://github.com/ndurner/aileen2
+2. install dependencies:
+    * cd aileen2; pip install -r requirements.txt
+3. install the transformer models
+    1. option 1: if you have a direct link to PaliGemma MIX 448:
+        1. at the local console:
+            * python3 ./setup_resources.py --vlm-model-url "https://..."
+    2. option 2: install using Hugging Face:
+        1. log in to HuggingFace, request access to the [MIX checkpoint](https://huggingface.co/google/paligemma-3b-mix-448)
+        2. at the local console:
+            * huggingface-cli login 
+            * huggingface-cli download "google/paligemma-3b-mix-448"
+        3. install the rest:
+            * python3 ./setup_resources.py
+4. integrations are mocked-up by default, to switch: in config.json set:
+    * implementations/agent_lm: lm_ngc
+    * implementations/vlm: vlm_hf
+    * implementations/ocr: ocr_easyocr
+5. create a file named ".env" in this folder:
+    * touch .env
+6. set Nvidia API key
+    1. Option 1: in .env:
+        * NVIDIA_API_KEY=nvapi-...
+    2. Option 2: in config.json:
+        * key "nvidia_api_key"
+7. optionally, if Aileen shall be reachable via SMS text messages ("Cloud office" option):
+    1. [create a Twilio account](https://www.twilio.com/try-twilio), get a Twilio phone number, retrieve Auth Token
+    2. add Twilio Auth Token:
+        1. Option 1: to .env:
+            * TWILIO_AUTH_TOKEN=...
+        2. Option 2: to config.json:
+            * key "twilio_auth_token"
+    3. in config.json, under "server", verify that the Webhook necessary to receive notifications on can be established at "host" and "port"
+    4. in the Twilio management console, establish an HTTP POST Webhook: as "http://<host>:<port>/sms", e.g.:
+        * http://ec2-54-226-207-14.compute-1.amazonaws.com:5000/sms
+8. optionally, if Aileen shall send results by E-Mail:
+    1. set up [Amazon Simple Email Service](https://aws.amazon.com/de/ses/)
+    2. if in a sandboxed account, be sure to register any recepients under Identities
+    3. for the IAM user, role "AmazonSESFullAccess" can be used
+    4. add AWS Access Key and Secret Access Key to .env:
+        * AWS_ACCESS_KEY_ID=A...
+        * AWS_SECRET_ACCESS_KEY=B...
+9. add user profile to config.json: key "users":
+```
+    "users": {
+        "+18005550100": {
+            "profile": "Software Engineer",
+            "email": "ndurner@example.invalid"
+        }
+```
+
+# Advanced Configuration
+When the mockups have been switched for real implementations (see Installing above), the Language Models Llama3-8B-Instruct (for the Agent) and Gemma-7B (for summarization) are used by default. This can be changed in config.json to models offered through the Nvidia NGC Model Catalog. Not all models are supported, though. A list of supported models can be found in lm.py ("get_ctx_len_for_model"). For each model, the Tokenizer needs to be accessible. For gated models, this can be achieved by obtaining access via Hugging Face (and setting HF_TOKEN in .env) or establishing a publicly accessible copy in lm.py ("get_tokenizer_for_model").
+
+# Running
+1. Option 1: on local device:
+    * python3 ./main.py --task "Summarize https://dbtg.tv/cvid/7611506"
+2. Option 2: on server ("cloud office"):
+    * python3 ./server.py
+
+# Acknowledgments
+The PaliGemma parser in paligemma/ was taken from Big-Vision repository, where it was released under Apache-2.0 license.

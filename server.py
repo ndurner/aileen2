@@ -1,19 +1,17 @@
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import Response
-from pydantic import BaseModel
-import json
 from twilio.request_validator import RequestValidator
 from config import Config
+from webagent import WebAgent
+import mylog
 
 app = FastAPI()
 config = Config()
+mylog.setup_logging()
+logger = mylog.getLogger(__name__)
 
 @app.post("/sms")
 async def receive_sms(request: Request):
-    """
-    Receives SMS messages from Twilio and validates the request using Twilio's signature.
-    """
-    # Validate the Twilio signature
     validator = RequestValidator(config.twilio_auth_token)
     data = await request.form()
     request_valid = validator.validate(
@@ -23,12 +21,21 @@ async def receive_sms(request: Request):
     )
 
     if not request_valid:
+        logger.error("Invalid request signature")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid request signature")
 
-    # Log the message to the console
     body = data.get('Body')
     sender = data.get('From')
-    print(f"Received SMS from {sender}: {body}")
+    logger.debug(f"Received SMS from {sender}: {body}")
+
+    profile_id = sender
+    profile = config.user_profiles.get(profile_id)
+    if profile is None:
+        logger.warning(f"No profile found for sender: {sender}")
+        return Response(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
+
+    agent = WebAgent()
+    agent.start(body, profile)
 
     return Response()
 

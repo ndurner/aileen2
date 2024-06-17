@@ -26,7 +26,7 @@ def download_vlm_from_url(url, save_path):
             print(f"ERROR: something went wrong during the download (incomplete?)")  # Check if the download was completed fully
 
     print(f"Downloaded from {url} to {save_path}")
-    
+
     # Check if the downloaded file is a tar file and extract it
     if tarfile.is_tarfile(save_path):
         extract_vlm_dl(save_path)
@@ -45,9 +45,29 @@ def download_vlm_model():
     PaliGemmaForConditionalGeneration.from_pretrained(vlm_config["model"])
     PaliGemmaProcessor.from_pretrained(vlm_config["model"])
 
+def download_lm_tokenizer():
+    from transformers import AutoTokenizer
+    from lm import LM
+
+    lm_config = general_config.get_ngc_config()
+    lm_config_sum = lm_config['summarizer']
+
+    try:
+        lm = LM()
+        tok = AutoTokenizer.from_pretrained(lm.get_tokenizer_for_model(lm_config_sum['model']))
+    except:
+        # conservative fallback, just in case
+        tok = AutoTokenizer.from_pretrained("google-bert/bert-base-cased")
+    tok.encode("A")
+
 def setup_ocr():
+    from PIL import Image
+    import numpy as np
     import easyocr
-    easyocr.Reader(['de'])
+
+    img = Image.new("RGBA", (1, 1))
+    rd = easyocr.Reader(['de'])
+    rd.readtext(np.array(img))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download model and tokenizer")
@@ -61,3 +81,5 @@ if __name__ == "__main__":
             extract_vlm_dl(args.vlm_model_url)
     else:
         download_vlm_model()
+    download_lm_tokenizer()
+    setup_ocr()

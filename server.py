@@ -32,7 +32,7 @@ async def receive_sms(request: Request):
     profile = config.user_profiles.get(profile_id)
     if profile is None:
         logger.warning(f"No profile found for sender: {sender}")
-        return Response(status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found")
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
 
     agent = WebAgent()
     agent.start(body, profile)

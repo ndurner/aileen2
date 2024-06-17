@@ -14,6 +14,8 @@ TOKENIZER_PATH = os.path.join(TOKENIZER_DIR, "vlm_tokenizer.model")
 class VLM:
     """Visual model implementation"""
 
+    debug = False
+
     def patch_size(self) -> Tuple[int, int]:
         """
         Get the native image patch size

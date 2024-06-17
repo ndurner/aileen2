@@ -3,6 +3,13 @@ Welcome to Aileen 2.0! Aileen is an AI office agent designed to assist with spec
 
 Please note that Aileen 2.0 is specialized for this single use-case and is not (yet?) a general-purpose AI assistant.
 
+> Aileen 2 was created for 'NVIDIA and LangChain #GenerativeAI Agents Developer Contest'. Treat it as a technology preview.
+
+# Features and special techniques
+* Vision: can "look" at websites through PaliGemma
+* Small Language Model support
+* Function-calling implemented through Python syntax (not JSON, as commonly used)
+
 # Prerequisites
 - Ubuntu GNU/Linux, Python 3
 - [Nvidia NGC API key](https://docs.nvidia.com/ai-enterprise/deployment-guide-spark-rapids-accelerator/0.1.0/appendix-ngc.html)
@@ -12,6 +19,8 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
             * activate environment with "conda activate pytorch"
         * Instance type: g4dn.xlarge
             * (provides Nvidia T4)
+            * 100 GB root volume
+            * optionally: Security Group settings that will allow inbound HTTP for Twilio SMS Webhook
 - Chrome installed (for Selenium)
     1. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     2. sudo apt install ./google-chrome-stable_current_amd64.deb
@@ -19,6 +28,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 
 # Installation
 0. (ensure that your PyTorch enabled venv is enabled)
+    * conda init
     * conda activate pytorch
 1. download this repository:
     * git clone --depth 1 https://github.com/ndurner/aileen2
@@ -54,7 +64,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
         2. Option 2: to config.json:
             * key "twilio_auth_token"
     3. in config.json, under "server", verify that the Webhook necessary to receive notifications on can be established at "host" and "port"
-    4. in the Twilio management console, establish an HTTP POST Webhook: as "http://<host>:<port>/sms", e.g.:
+    4. in the Twilio management console (Phone Numbers -> Active Numbers -> (Number) -> "Configure" tab -> scroll down to "Messaging Configuration"), establish an HTTP POST Webhook: as "http://(host):(port)/sms", e.g.:
         * http://ec2-54-226-207-14.compute-1.amazonaws.com:5000/sms
 8. optionally, if Aileen shall send results by E-Mail:
     1. set up [Amazon Simple Email Service](https://aws.amazon.com/de/ses/)
@@ -76,10 +86,21 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 When the mockups have been switched for real implementations (see Installing above), the Language Models Llama3-8B-Instruct (for the Agent) and Gemma-7B (for summarization) are used by default. This can be changed in config.json to models offered through the Nvidia NGC Model Catalog. Not all models are supported, though. A list of supported models can be found in lm.py ("get_ctx_len_for_model"). For each model, the Tokenizer needs to be accessible. For gated models, this can be achieved by obtaining access via Hugging Face (and setting HF_TOKEN in .env) or establishing a publicly accessible copy in lm.py ("get_tokenizer_for_model").
 
 # Running
+0. (use TRANSFORMERS_OFFLINE=1 if a gated model (like PaliGemma) is to be used without Hugging Face access), e.g.:
+    * export TRANSFORMERS_OFFLINE=1
 1. Option 1: on local device:
     * python3 ./main.py --task "Summarize https://dbtg.tv/cvid/7611506"
 2. Option 2: on server ("cloud office"):
     * python3 ./server.py
+
+# Anticipated questions
+## SessionNotCreatedException
+Error message:
+> selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: exited normally.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location /home/ubuntu/.cache/selenium/chrome/linux64/126.0.6478.61/chrome is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+
+Remedy: check that Chrome is installed and Selenium is set up (see Prerequisites above)
 
 # Acknowledgments
 The PaliGemma parser in paligemma/ was taken from Big-Vision repository, where it was released under Apache-2.0 license.

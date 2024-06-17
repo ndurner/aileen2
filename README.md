@@ -26,7 +26,8 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
         * Template: Nvcr.io/Nvidia/Pytorch
         * Disk: 60 GB
         * Launch mode: "Run interactive shell server, SSH"
-> --image nvcr.io/nvidia/pytorch:23.10-py3 --env '-e DATA_DIRECTORY=/workspace/' --disk 60.12945594969661 --ssh --direct
+        * (cli command:)
+> vastai create instance x --image nvcr.io/nvidia/pytorch:23.10-py3 --env '-e DATA_DIRECTORY=/workspace/' --disk 60.12945594969661 --ssh --direct
 
 - Chrome installed (for Selenium)
     * wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb

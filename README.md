@@ -94,6 +94,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
             "email": "ndurner@example.invalid"
         }
 ```
+The key (+1800... in this example) is the user’s phone number, the "profile" therein their profile text (used for the personalized summary) and recipient E-Mail address.
 
 # Advanced Configuration
 When the mockups have been switched for real implementations (see Installing above), the Language Models Llama3-8B-Instruct (for the Agent) and Gemma-7B (for summarization) are used by default. This can be changed in config.json to models offered through the Nvidia NGC Model Catalog. Not all models are supported, though. A list of supported models can be found in lm.py ("get_ctx_len_for_model"). For each model, the Tokenizer needs to be accessible. For gated models, this can be achieved by obtaining access via Hugging Face (and setting HF_TOKEN in .env) or establishing a publicly accessible copy in lm.py ("get_tokenizer_for_model").

@@ -29,8 +29,8 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 > --image nvcr.io/nvidia/pytorch:23.10-py3 --env '-e DATA_DIRECTORY=/workspace/' --disk 60.12945594969661 --ssh --direct
 
 - Chrome installed (for Selenium)
-    1. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    2. sudo apt install ./google-chrome-stable_current_amd64.deb
+    * wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    * sudo apt install ./google-chrome-stable_current_amd64.deb
 - Internet connection for Installation below
 
 # Installation

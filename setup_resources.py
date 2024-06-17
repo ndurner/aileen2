@@ -61,8 +61,3 @@ if __name__ == "__main__":
             extract_vlm_dl(args.vlm_model_url)
     else:
         download_vlm_model()
-
-    # Attempt to install Chrome (which fails on macOS as of now)
-    if platform.system() != 'Darwin':
-        from webdriver_manager.chrome import ChromeDriverManager
-        ChromeDriverManager().install()

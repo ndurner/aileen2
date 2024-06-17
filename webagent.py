@@ -41,6 +41,7 @@ class WebAgent:
 
     def get_bundestag_transcript(self, url: str):
         # load web page
+        log.debug(f"Opening website {url}")
         self.webpage.open(url)
 
         time.sleep(5) # FIXME
@@ -51,9 +52,11 @@ class WebAgent:
 
         # get web browser screenshot description
         desc = self.vlm.desc_en(cur_screenshot)
+        log.debug(f"Screenshot described as '{desc}', determining next step")
 
         next_step = self.lm.get_bundestag_transcript(url, desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
+        log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
         if tool_name == "find_options_button":
             vlm_coords = self.vlm.scan_for_button(cur_screenshot, "options")
@@ -63,10 +66,14 @@ class WebAgent:
                 self._browser_click(elem)
 
                 self.get_dl_btn()
-
+            else:
+                self.report_error("Options/share button not found")
+                return
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
+        else:
+            self.report_error(f"LM requested unknown tool {tool_name} at get_bundestag_transcript()")
 
     def get_dl_btn(self):
         cur_screenshot = self.webpage.screenshot()
@@ -74,8 +81,10 @@ class WebAgent:
             cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
+        log.debug(f"Screenshot described as '{desc}', determining next step")
         next_step = self.lm.get_dl_btn(desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
+        log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
         if tool_name == "find_download_button":
             vlm_coords = self.vlm.scan_for_button(cur_screenshot, "download")
@@ -88,6 +97,8 @@ class WebAgent:
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
+        else:
+            self.report_error(f"LM requested unknown tool {tool_name} at get_dl_btn()")
 
     def get_subtitles_btn(self):
         cur_screenshot = self.webpage.screenshot()
@@ -95,8 +106,11 @@ class WebAgent:
             cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
+        log.debug(f"Screenshot described as '{desc}', determining next step")
+
         next_step = self.lm.get_subtitles_btn(desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
+        log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
         if tool_name == "find_subtitles_button":
             srt_coords = self.ocr.scan_for_text(cur_screenshot, "Untertitel")
@@ -109,6 +123,8 @@ class WebAgent:
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
+        else:
+            self.report_error(f"LM requested unknown tool {tool_name} at get_subtitles_btn()")
 
     def get_confirm_btn(self):
         cur_screenshot = self.webpage.screenshot()
@@ -116,8 +132,11 @@ class WebAgent:
             cur_screenshot.save("/tmp/after_click.png")
 
         desc = self.vlm.desc_en(cur_screenshot)
+        log.debug(f"Screenshot described as '{desc}', determining next step")
+
         next_step = self.lm.get_confirm_btn(desc)
         tool_name, tool_args = self._parse_tool_call(next_step)
+        log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
         if tool_name == "find_confirm_button":
             confirm_coords = self.ocr.scan_for_text(cur_screenshot, "Ja und herunterladen")
@@ -130,6 +149,8 @@ class WebAgent:
         elif tool_name == "report_error_to_user":
             error_msg = "Unknown error" if not tool_args else tool_args[0]
             self.report_error(error_msg)
+        else:
+            self.report_error(f"LM requested unknown tool {tool_name} at get_confirm_btn()")
 
     def summarize(self):
         dl_fn, payload = self.webpage.get_latest_download()
@@ -137,10 +158,12 @@ class WebAgent:
             payload = srt2txt.process(payload)
 
         resp = self.lm.summarize_for_audience(payload, self.target_audience)
-        log.info(f"summarization result: {resp}")
+        print(f"summarization result: {resp}")
 
         if self.user_email:
             self.email_sender.send_email(self.user_email, "Meeting summary", resp)
+        else:
+            log.warning("not sending E-Mail because no address is configured")
 
     def report_error(self, error_msg: str):
         log.error(f"Cannot operate webpage: {error_msg}")

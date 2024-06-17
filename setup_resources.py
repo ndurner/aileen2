@@ -40,7 +40,7 @@ def extract_vlm_dl(tar_path):
         tar.extractall(path=target_dir)
     print(f"Extracted {tar_path} to {target_dir}")
 
-def download_vlm_model(kaggle_username, kaggle_key, model_url=None):
+def download_vlm_model():
     from transformers import PaliGemmaForConditionalGeneration, PaliGemmaProcessor
     PaliGemmaForConditionalGeneration.from_pretrained(vlm_config["model"])
     PaliGemmaProcessor.from_pretrained(vlm_config["model"])

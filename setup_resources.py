@@ -2,6 +2,7 @@ import os
 import requests
 import argparse
 import tarfile
+from tqdm import tqdm
 import platform
 from config import Config
 
@@ -12,9 +13,18 @@ def download_vlm_from_url(url, save_path):
     print("Downloading VLM...")
     with requests.get(url, stream=True) as response:
         response.raise_for_status()  # Check for request errors
+        total_size_in_bytes = int(response.headers.get('content-length', 0))  # Get the total size of the file
+        progress_bar = tqdm(total=total_size_in_bytes, unit='iB', unit_scale=True)
+
         with open(save_path, 'wb') as file:
             for chunk in response.iter_content(chunk_size=8192):
+                progress_bar.update(len(chunk))  # Update the progress bar
                 file.write(chunk)
+        progress_bar.close()
+
+        if progress_bar.n != total_size_in_bytes:
+            print(f"ERROR: something went wrong during the download (incomplete?)")  # Check if the download was completed fully
+
     print(f"Downloaded from {url} to {save_path}")
     
     # Check if the downloaded file is a tar file and extract it
@@ -23,7 +33,7 @@ def download_vlm_from_url(url, save_path):
 
 def extract_vlm_dl(tar_path):
     # Define the target directory for extraction
-    target_dir = os.path.expanduser("~/.cache/huggingface/hub/models--google--paligemma-3b-mix-448/")
+    target_dir = os.path.expanduser("~/.cache/huggingface/hub/")
     os.makedirs(target_dir, exist_ok=True)  # Ensure the target directory exists
     
     with tarfile.open(tar_path, "r") as tar:

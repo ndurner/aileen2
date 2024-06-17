@@ -18,3 +18,4 @@ easyocr
 sentencepiece
 boto3
 markdown
+tqdm

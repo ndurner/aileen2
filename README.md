@@ -6,7 +6,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 > Aileen 2 was created for 'NVIDIA and LangChain #GenerativeAI Agents Developer Contest'. Treat it as a technology preview.
 
 # Features and special techniques
-* Vision: can "look" at websites through PaliGemma
+* Vision: can "look" at websites through PaliGemma and EasyOCR CRAFT-CDNN
 * Small Language Model support
 * Function-calling implemented through Python syntax (not JSON, as commonly used)
 

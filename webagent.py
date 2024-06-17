@@ -87,7 +87,7 @@ class WebAgent:
         log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
         if tool_name == "find_download_button":
-            vlm_coords = self.vlm.scan_for_button(cur_screenshot, "download")
+            vlm_coords = self.ocr.scan_for_text(cur_screenshot, "Herunterladen")
             if vlm_coords:
                 log.info(f"Found downloads button! {vlm_coords}")
                 elem = vlm_coords[0]
@@ -138,7 +138,7 @@ class WebAgent:
         tool_name, tool_args = self._parse_tool_call(next_step)
         log.debug(f"Tool to use: '{tool_name}', args: {tool_args}")
 
-        if tool_name == "find_confirm_button":
+        if tool_name == "find_download_button":
             confirm_coords = self.ocr.scan_for_text(cur_screenshot, "Ja und herunterladen")
             if confirm_coords:
                 log.info(f"Found confirm button! {confirm_coords}")

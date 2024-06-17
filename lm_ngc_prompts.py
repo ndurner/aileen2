@@ -108,9 +108,9 @@ confirm_btn = '''The webpage now looks like this:
 
 You now have the following tools available:
 ###
-def find_confirm_button() -> str
+def find_download_button() -> str
     """
-        Get the pixels coordinates of the confirmation button
+        Get the pixels coordinates of the download button
     """
 
 def report_error_to_user(error_msg: str)

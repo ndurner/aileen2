@@ -36,11 +36,13 @@ class VLM_HF(VLM):
     def check_patch_for_button(self, patch: Image, button: str) -> str:
         if button == "options":
             return self._find_options(patch)
+        else:
+            return None
 
     def _find_options(self, patch: Image):
         opts_present = self._run_pali(patch, f"Is there a share button?")
         if opts_present == "yes":
-            seg = self._run_pali(patch, "segment share")
+            seg = self._run_pali(patch, "segment share button")
             if seg and seg != "<eos>":
                 width, height = patch.size
                 objs = paligemma_parse.extract_objs(seg, width, height, unique_labels=True)

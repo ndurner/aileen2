@@ -47,6 +47,9 @@ class VLM_HF(VLM):
                 width, height = patch.size
                 objs = paligemma_parse.extract_objs(seg, width, height, unique_labels=True)
 
+                if self.debug:
+                    self._dump_seg(patch, objs)
+
                 # Reject objects that touch on the border of the attention window (may be truncated)
                 objs = [obj for obj in objs if 'xyxy' in obj and not (obj['xyxy'][0] == 0 or obj['xyxy'][1] == 0 or obj['xyxy'][2] == 448 or obj['xyxy'][3] == 448)]
 
@@ -69,7 +72,7 @@ class VLM_HF(VLM):
         mask_draw = ImageDraw.Draw(mask_image)
 
         for obj in objs:
-            mask = obj['mask']
+            mask = obj.get('mask', None)
             if mask is not None:
                 # Apply the mask to the image using a color map that reflects confidence
                 for y in range(mask.shape[0]):
@@ -89,8 +92,12 @@ class VLM_HF(VLM):
                         mask_draw.point((x, y), color)
 
             # Draw the bounding box
-            x1, y1, x2, y2 = obj['xyxy']
-            draw.rectangle([x1, y1, x2, y2], outline="red", width=2)
+            try:
+                x1, y1, x2, y2 = obj['xyxy']
+                draw.rectangle([x1, y1, x2, y2], outline="red", width=2)
+            except:
+                # decoder may produce invalid rects, so just pass
+                pass
 
         # Composite the mask image with the original patch
         patch = Image.alpha_composite(patch.convert("RGBA"), mask_image)

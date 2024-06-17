@@ -53,9 +53,13 @@ class VLM:
 
         width, height = image.size
         ret = []
+        patch_idx = 0
         for y in range(0, height - patch_size + 1, stride):
             for x in range(0, width - patch_size + 1, stride):
                 patch = image.crop((x, y, x + patch_size, y + patch_size))
+                if self.debug:
+                    patch.save(f"/tmp/crop-{x}-{y}-{patch_idx}.png")
+                    patch_idx = patch_idx + 1
                 results = process_patch(patch, **kwargs)
                 if results:
                     for i, result in enumerate(results):

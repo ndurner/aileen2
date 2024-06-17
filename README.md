@@ -13,7 +13,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 # Prerequisites
 - Ubuntu GNU/Linux, Python 3
 - [Nvidia NGC API key](https://docs.nvidia.com/ai-enterprise/deployment-guide-spark-rapids-accelerator/0.1.0/appendix-ngc.html)
-- Nvidia CUDA and Pytorch set up
+- Nvidia CUDA and PyTorch set up. Tested variants:
     - Option 1: Amazon Web Services:
         * AMI: "Deep Learning OSS Nvidia Driver AMI GPU PyTorch 2.3 (Ubuntu 20.04)"
             * activate environment with "conda activate pytorch"
@@ -21,6 +21,13 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
             * (provides Nvidia T4)
             * 100 GB root volume
             * optionally: Security Group settings that will allow inbound HTTP for Twilio SMS Webhook
+    - Option 2: Vast.ai:
+        * Instance type: 1x RTX A5000
+        * Template: Nvcr.io/Nvidia/Pytorch
+        * Disk: 60 GB
+        * Launch mode: "Run interactive shell server, SSH"
+> --image nvcr.io/nvidia/pytorch:23.10-py3 --env '-e DATA_DIRECTORY=/workspace/' --disk 60.12945594969661 --ssh --direct
+
 - Chrome installed (for Selenium)
     1. wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     2. sudo apt install ./google-chrome-stable_current_amd64.deb
@@ -28,19 +35,24 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 
 # Installation
 0. (ensure that your PyTorch enabled venv is enabled)
-    * conda init
-    * conda activate pytorch
+    * with the AWS Deep Learning AMI:
+        * conda init
+        * conda activate pytorch
+    * with the Nvidia PyTorch container:
+        * sudo apt install python3.10-venv
+        * python3 -m venv venv
+        * source venv/bin/activate
 1. download this repository:
     * git clone --depth 1 https://github.com/ndurner/aileen2
 2. install dependencies:
-    * cd aileen2; pip install -r requirements.txt
+    * cd aileen2; pip install -U -r requirements.txt
 3. install the transformer models
     1. option 1: if you have a direct link to PaliGemma MIX 448:
-        1. at the local console:
+        1. at the console:
             * python3 ./setup_resources.py --vlm-model-url "https://..."
     2. option 2: install using Hugging Face:
         1. log in to HuggingFace, request access to the [MIX checkpoint](https://huggingface.co/google/paligemma-3b-mix-448)
-        2. at the local console:
+        2. at the console:
             * huggingface-cli login 
             * huggingface-cli download "google/paligemma-3b-mix-448"
         3. install the rest:
@@ -73,7 +85,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
     4. add AWS Access Key and Secret Access Key to .env:
         * AWS_ACCESS_KEY_ID=A...
         * AWS_SECRET_ACCESS_KEY=B...
-9. add user profile to config.json: key "users":
+9. add user profile(s) to config.json: key "users":
 ```
     "users": {
         "+18005550100": {
@@ -101,6 +113,29 @@ Error message:
   (The process started from chrome location /home/ubuntu/.cache/selenium/chrome/linux64/126.0.6478.61/chrome is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
 
 Remedy: check that Chrome is installed and Selenium is set up (see Prerequisites above)
+
+## Access to model is restricted
+Error message:
+> Access to model google/paligemma-3b-mix-448 is restricted. You must be authenticated to access it.
+
+Remedy: after PaliGemma has been downloaded to the Hugging Face cache (either through a direct download/setup-resources.py or huggingface-cli, see above),
+both main.py and server.py can be run after the TRANSFORMERS_OFFLINE environment variable has been set, e.g. in the file .env:
+> TRANSFORMERS_OFFLINE=1
+
+If setup-resources.py had failed previously after a successful direct-download of PaliGemma, you can re-run
+setup-resources.py using the already downloaded tar instead of the direct-download URL:
+> python3 ./setup_resources.py --vlm-model-url /tmp/paligemma.tar
+
+## module 'cv2.dnn' has no attribute 'DictValue'
+Error message:
+> AttributeError: module 'cv2.dnn' has no attribute 'DictValue'
+
+Set up a fresh venv. Assuming the Nvidia PyTorch container:
+> apt install python3.10-venv
+python3 -m venv venv
+source venv/bin/activate
+
+Then, repeat installation procedure as above.
 
 # Acknowledgments
 The PaliGemma parser in paligemma/ was taken from Big-Vision repository, where it was released under Apache-2.0 license.

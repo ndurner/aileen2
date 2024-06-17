@@ -34,6 +34,7 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
     * wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     * sudo apt install ./google-chrome-stable_current_amd64.deb
 - Internet connection for Installation below
+- optional: AWS Simple E-Mail Service, Twilio Messaging
 
 # Installation
 0. (ensure that your PyTorch enabled venv is enabled)

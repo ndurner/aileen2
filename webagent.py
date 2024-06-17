@@ -1,3 +1,4 @@
+import os
 from singleton_decorator import singleton
 from lm_mock import LM_Mock
 from vlm_mock import VLM_Mock
@@ -160,15 +161,15 @@ class WebAgent:
         resp = self.lm.summarize_for_audience(payload, self.target_audience)
         print(f"summarization result: {resp}")
 
-        if self.user_email:
+        if self.user_email and os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"):
             self.email_sender.send_email(self.user_email, "Meeting summary", resp)
         else:
-            log.warning("not sending E-Mail because no address is configured")
+            log.warning("not sending E-Mail because no address or no AWS access is configured")
 
     def report_error(self, error_msg: str):
         log.error(f"Cannot operate webpage: {error_msg}")
 
-        if self.user_email:
+        if self.user_email and os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"):
             self.email_sender.send_email(self.user_email, "Error", "An error has occured. Please check the logs.")
 
     def _parse_tool_call(self, call_str: str) -> Tuple[Any, Any]:

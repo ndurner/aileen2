@@ -135,9 +135,11 @@ Error message:
 > AttributeError: module 'cv2.dnn' has no attribute 'DictValue'
 
 Set up a fresh venv. Assuming the Nvidia PyTorch container:
-> apt install python3.10-venv
+```
+apt install python3.10-venv
 python3 -m venv venv
 source venv/bin/activate
+```
 
 Then, repeat installation procedure as above.
 

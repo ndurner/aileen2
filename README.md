@@ -5,6 +5,8 @@ Please note that Aileen 2.0 is specialized for this single use-case and is not (
 
 > Aileen 2 was created for 'NVIDIA and LangChain #GenerativeAI Agents Developer Contest'. Treat it as a technology preview.
 
+This project received [Honorable Mention](https://www.nvidia.com/en-us/ai-data-science/generative-ai/developer-contest-with-langchain/) in the aforementioned contest.
+
 # Features and special techniques
 * Vision: can "look" at websites through [Google PaliGemma](https://github.com/google-research/big_vision/blob/main/big_vision/configs/proj/paligemma/README.md) and [EasyOCR CRAFT-CDNN](https://github.com/JaidedAI/EasyOCR)
 * Small Language Model support
